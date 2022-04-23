@@ -8,36 +8,40 @@ function result(pass){
 }
 
 get(getUrl, function(data){	
-	// test GET works
+	// test GET
 	const jd = JSON.parse(data);
 	let pass = (jd.id != null && jd.operation != null && jd.left != null && jd.right != null);
 	console.log("Test Get (ID, Operation, Left, Right): " + result(pass));
 	
+	// compute addition
 	let compPlus = compute(JSON.stringify({id: "test", operation: "addition", left: 2, right: 2}));
 	console.log("Test Compute Add: " + result(compPlus.result == 4));
-	
+	// compute subtraction
 	let compMinus = compute(JSON.stringify({id: "test", operation: "subtraction", left: 4, right: 1}));
 	console.log("Test Compute Subtract: " + result(compMinus.result == 3));
-	
+	// compute multiplication
 	let compMult = compute(JSON.stringify({id: "test", operation: "multiplication", left: 1, right: 5}));
 	console.log("Test Compute Multiply: " + result(compMult.result == 5));
-	
+	// compute division
 	let compDiv = compute(JSON.stringify({id: "test", operation: "division", left: 8, right: 2}));
 	console.log("Test Compute Divide: " + result(compDiv.result == 4));
-	
+	// compute remainder
 	let compMod = compute(JSON.stringify({id: "test", operation: "remainder", left: 9, right: 7}));
 	console.log("Test Compute Remainder: " + result(compMod.result == 2));
 	
+	// test normal POST
 	let dataResult = compute(data);
 	post(postUrl, dataResult)
 		.then(value => { console.log("Test Post OK: " + result(value == "Success")) })
 		.catch(error => { console.log("Test Post OK: FAIL") });
 			
+	// test POST with wrong result
 	let dataResP1 = {id:dataResult.id, result:dataResult.result+1};		
 	post(postUrl, dataResP1)
 		.then(value => { console.log("Test Post Wrong Result: FAIL") })
 		.catch(error => { console.log("Test Post Wrong Result: " + result(error == "Error: Incorrect value in result; no ID specified; value is invalid")) });
 	
+	// test POST with wrong id
 	let dataIdP0 = {id:dataResult.id+"0", result:dataResult.result};
 	post(postUrl, dataIdP0)
 		.then(value => { console.log("Test Post Wrong ID: FAIL") })
